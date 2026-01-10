@@ -262,7 +262,7 @@ images.push(data.secure_url);
 processed++;
 
 if (processed === files.length) {
-trees.push({
+/*trees.push({
 id: trees.length + 1,
 name: name,
 description: description,
@@ -278,7 +278,19 @@ alert('Tree added successfully!');
 showPage('home');
 }
 })
-.catch((error) => console.error(error.response));
+.catch((error) => console.error(error.response));*/
+fetch('/.netlify/functions/trees', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: treeName,
+    description: treeDescription,
+    images: images,
+  }),
+})
+.then((response) => response.json())
+.then((data) => console.log(data))
+.catch((error) => console.error(error));
 });
 } else {
 alert('Please fill all fields and select at least one image');
