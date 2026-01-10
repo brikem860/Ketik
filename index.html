@@ -283,8 +283,8 @@ fetch('/.netlify/functions/trees', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    name: treeName,
-    description: treeDescription,
+    name: name,
+    description: description,
     images: images,
   }),
 })
