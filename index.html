@@ -250,7 +250,7 @@ let processed = 0;
 Array.from(files).forEach((file) => {
 const formData = new FormData();
 formData.append('file', file);
-formData.append('arapmeliketik', uploadPreset);
+formData.append('uploadPreset', uploadPreset);
 
 fetch(url, {
 method: 'POST',
