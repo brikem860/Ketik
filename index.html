@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meliketik - Discover Trees & Their Uses</title>
-    <link rel="stylesheet" href="style.css"  type="text/css" />
+    <link rel="stylesheet" href="style.css" title="" type="text/css" />
 </head>
 <body>
     <div class="container">
@@ -194,7 +194,8 @@
             });
         });
 
-        function addTree() {
+        function addTree() 
+        /*{
             const name = document.getElementById('treeName').value;
             const description = document.getElementById('treeDescription').value;
             const files = document.getElementById('treeImages').files;
@@ -232,7 +233,57 @@
             } else {
                 alert('Please fill all fields and select at least one image');
             }
-        }
+        }*/
+        {
+const name = document.getElementById('treeName').value;
+const description = document.getElementById('treeDescription').value;
+const files = document.getElementById('treeImages').files;
+
+if (name && description && files.length > 0) {
+const uploadPreset = 'arapmeliketik'; // Replace with your Cloudinary upload preset
+const cloudName = 'dpbw6l6iq'; // Replace with your Cloudinary cloud name
+const url = `https://api.cloudinary.com/v1_1/${dpbw6l6iq}`;
+
+const images = [];
+let processed = 0;
+
+Array.from(files).forEach((file) => {
+const formData = new FormData();
+formData.append('file', file);
+formData.append('arapmeliketik', uploadPreset);
+
+fetch(url, {
+method: 'POST',
+body: formData,
+})
+.then((response) => response.json())
+.then((data) => {
+images.push(data.secure_url);
+processed++;
+
+if (processed === files.length) {
+trees.push({
+id: trees.length + 1,
+name: name,
+description: description,
+images: images,
+suggestions: [],
+});
+
+document.getElementById('treeName').value = '';
+document.getElementById('treeDescription').value = '';
+document.getElementById('treeImages').value = '';
+document.getElementById('imagePreview').innerHTML = '';
+alert('Tree added successfully!');
+showPage('home');
+}
+})
+.catch((error) => console.error(error));
+});
+} else {
+alert('Please fill all fields and select at least one image');
+}
+}
 
         renderTrees();
     </script>
