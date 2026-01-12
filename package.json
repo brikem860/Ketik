@@ -1,7 +1,0 @@
-{
-  "name": "ketik",
-  "version": "1.0.0",
-  "dependencies": {
-    "@netlify/db": "latest"
-  }
-}
