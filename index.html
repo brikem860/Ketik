@@ -15,7 +15,7 @@
       </div>
       <div class="nav-buttons">
         <button class="nav-btn" onclick="showPage('home')">Home</button>
-        <button class="nav-btn" onclick="showPage('admin')">Admin Panel</button>
+       <!-- <button class="nav-btn" onclick="showPage('admin')">Admin Panel</button>-->
         <button class="nav-btn" onclick="showPage('profile')">Profile</button>
       </div>
     </header>
@@ -42,7 +42,7 @@
     <!-- Profile Page -->
     <div id="profile" class="page">
       <div class="profile-card">
-        <div class="profile-avatar"><img src="/1768216582457.jpg" class="small-round-image" alt="" /></div>
+        <div class="profile-avatar"><img src="/1768216582457.jpg"onclick="showPage('admin')" class="small-round-image" alt="" /></div>
         <h2>Admin Profile</h2>
         <h3>Arap Meli</h3>
         <p> Welcome to Meliketik - your comprehensive platform for discovering trees and their uses. </p>
@@ -50,7 +50,7 @@
         <div class="profile-info">
           <p>Developed by</p>
           <p>britographics</p>
-          <button  class="share-button"><a href="https://britographics.netlify.app/">visit us</a></button>
+          <button  class="share-button"><a href="">visit us</a></button>
         </div>
       </div>
     </div>
@@ -133,7 +133,15 @@
   })
   .catch((error) => console.error(error));
 }
-
+function showAdminPanel() {
+  const password = prompt("Enter admin password:");
+  if (password === "2026") {
+    // Show admin panel content
+    document.getElementById('admin-panel').style.display = 'block';
+  } else {
+    alert("Incorrect password");
+  }
+}
 
 function shareTree(treeId) {
   const url = `${window.location.origin}/tree/${treeId}`;
@@ -151,11 +159,7 @@ function shareTree(treeId) {
     });
   }
 }
-
-
-
-
-    function addTree() {
+ function addTree() {
       const name = document.getElementById('treeName').value;
       const description = document.getElementById('treeDescription').value;
       const files = document.getElementById('treeImages').files;
