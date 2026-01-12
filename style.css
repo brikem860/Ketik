@@ -510,3 +510,9 @@
 .share-button:hover {
   background-color: #3e8e41;
 }
+.small-round-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+}
