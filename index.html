@@ -99,38 +99,60 @@
   .catch((error) => console.error(error));
 }
 
-    function showTreeDetail(treeId) {
-      const treeRef = `${databaseUrl}trees/${treeId}.json`;
-      fetch(treeRef)
-      .then((response) => response.json())
-      .then((tree) => {
-        const content = document.getElementById('treeDetailContent');
-        content.innerHTML = `
-          <h2>${tree.name}</h2>
-          <div class="tree-images">
-            ${tree.images.map(img => `<img src="${img}" alt="${tree.name}">`).join('')}
-          </div>
-          <p style="color: #2e7d32; line-height: 1.9; margin: 25px 0; font-size: 1.1em;">${tree.description}</p>
-          <div class="suggestion-form">
-            <h3>Share Your Suggestion</h3>
-            <input type="text" id="suggestionInput" placeholder="Enter your suggestion about this tree...">
-            <button onclick="addSuggestion('${treeId}')">Submit Suggestion</button>
-          </div>
-          <div class="suggestions-list">
-            <h3>Community Suggestions</h3>
-            <div id="suggestionsList">
-              ${tree.suggestions ? Object.values(tree.suggestions).map(s => `
-                <div class="suggestion-item">
-                  <p>${s}</p>
-                </div>
-              `).join('') : ''}
+  function showTreeDetail(treeId) {
+  const treeRef = `${databaseUrl}trees/${treeId}.json`;
+  fetch(treeRef)
+  .then((response) => response.json())
+  .then((tree) => {
+    const content = document.getElementById('treeDetailContent');
+    content.innerHTML = `
+      <h2>${tree.name}</h2>
+      <div class="tree-images">
+        ${tree.images.map(img => `<img src="${img}" alt="${tree.name}">`).join('')}
+      </div>
+      <p style="color: #2e7d32; line-height: 1.9; margin: 25px 0; font-size: 1.1em;">${tree.description}</p>
+      <div class="suggestion-form">
+        <h3>Share Your Suggestion</h3>
+        <input type="text" id="suggestionInput" placeholder="Enter your suggestion about this tree...">
+        <button onclick="addSuggestion('${treeId}')">Submit Suggestion</button>
+      </div>
+      <div class="suggestions-list">
+        <h3>Community Suggestions</h3>
+        <div id="suggestionsList">
+          ${tree.suggestions ? Object.values(tree.suggestions).map(s => `
+            <div class="suggestion-item">
+              <p>${s}</p>
             </div>
-          </div>
-        `;
-        showPage('treeDetail');
-      })
-      .catch((error) => console.error(error));
-    }
+          `).join('') : ''}
+        </div>
+      </div>
+      <button onclick="shareTree('${treeId}')">Share this tree</button>
+    `;
+    showPage('treeDetail');
+  })
+  .catch((error) => console.error(error));
+}
+
+
+function shareTree(treeId) {
+  const url = `${window.location.origin}/tree/${treeId}`;
+  if (navigator.share) {
+    navigator.share({
+      title: 'Check out this tree!',
+      text: 'I found this amazing tree!',
+      url: url,
+    })
+    .then(() => console.log('Shared successfully'))
+    .catch((error) => console.error('Error sharing:', error));
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('URL copied to clipboard!');
+    });
+  }
+}
+
+
+
 
     function addTree() {
       const name = document.getElementById('treeName').value;
@@ -187,26 +209,27 @@
       }
     }
 
-    function addSuggestion(treeId) {
-      const input = document.getElementById('suggestionInput');
-      const suggestion = input.value.trim();
-      if (suggestion) {
-        const suggestionRef = `${databaseUrl}trees/${treeId}/suggestions.json`;
-        fetch(suggestionRef, {
-          method: 'POST',
-          body: JSON.stringify(suggestion),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          input.value = '';
-          showTreeDetail(treeId);
-        })
-        .catch((error) => console.error(error));
-      }
-    }
+   function addSuggestion(treeId) {
+const input = document.getElementById('suggestionInput');
+const suggestion = input.value.trim();
+if (suggestion) {
+const suggestionRef = `${databaseUrl}trees/${treeId}/suggestions.json`;
+fetch(suggestionRef, {
+method: 'POST',
+body: JSON.stringify(suggestion),
+headers: {
+'Content-Type': 'application/json'
+}
+})
+.then((response) => response.json())
+.then((data) => {
+input.value = '';
+showTreeDetail(treeId);
+})
+.catch((error) => console.error(error));
+}
+}
+
 
     document.getElementById('treeImages').addEventListener('change', function(e) {
       const preview = document.getElementById('imagePreview');
