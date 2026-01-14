@@ -106,30 +106,39 @@ function shareTree(treeId) {
   }
 }
  function addTree() {
-      const name = document.getElementById('treeName').value;
-      const description = document.getElementById('treeDescription').value;
-      const files = document.getElementById('treeImages').files;
-      if (name && description && files.length > 0) {
-        const uploadPreset = 'arapmeliketik'; 
-        const cloudName = 'dpbw6l6iq'; 
-        const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-        const images = [];
-        let processed = 0;
-        Array.from(files).forEach((file) => {
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('upload_preset', uploadPreset);
-          fetch(url, {
-            method: 'POST',
-            body: formData,
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            images.push(data.secure_url);
-            processed++;
-            if (processed === files.length) {
-              const treeRef = `${databaseUrl}trees.json`;
-              fetch(treeRef, {
+  const name = document.getElementById('treeName').value;
+  const description = document.getElementById('treeDescription').value;
+  const files = document.getElementById('treeImages').files;
+  
+  console.log('Adding tree with name:', name);
+  console.log('Description:', description);
+  console.log('Files:', files);
+  
+  if (name && description && files.length > 0) {
+    const uploadPreset = 'arapmeliketik';
+    const cloudName = 'dpbw6l6iq';
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+    const images = [];
+    let processed = 0;
+    
+    Array.from(files).forEach((file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      
+      fetch(url, {
+          method: 'POST',
+          body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Cloudinary response:', data);
+          images.push(data.secure_url);
+          processed++;
+          
+          if (processed === files.length) {
+            const treeRef = `${databaseUrl}trees.json`;
+            fetch(treeRef, {
                 method: 'POST',
                 body: JSON.stringify({
                   name: name,
@@ -143,10 +152,7 @@ function shareTree(treeId) {
               })
               .then((response) => response.json())
               .then((data) => {
-                
-                document.querySelector('.skeleton-container').style.display = 'none';
-                
-                
+                console.log('Tree added to database:', data);
                 document.getElementById('treeName').value = '';
                 document.getElementById('treeDescription').value = '';
                 document.getElementById('treeImages').value = '';
@@ -154,15 +160,15 @@ function shareTree(treeId) {
                 alert('Tree added successfully!');
                 showPage('home');
               })
-              .catch((error) => console.error(error));
-            }
-          })
-          .catch((error) => console.error(error));
-        });
-      } else {
-        alert('Please fill all fields and select at least one image');
-      }
-    }
+              .catch((error) => console.error('Error adding tree to database:', error));
+          }
+        })
+        .catch((error) => console.error('Error uploading file to Cloudinary:', error));
+    });
+  } else {
+    alert('Please fill all fields and select at least one image');
+  }
+}
 
    function addSuggestion(treeId) {
 const input = document.getElementById('suggestionInput');
