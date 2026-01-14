@@ -119,7 +119,6 @@ function shareTree(treeId) {
           const formData = new FormData();
           formData.append('file', file);
           formData.append('upload_preset', uploadPreset);
-
           fetch(url, {
             method: 'POST',
             body: formData,
